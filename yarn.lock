@@ -71,6 +71,11 @@ js-tokens@^4.0.0:
   resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-4.0.0.tgz#19203fb59991df98e3a287050d4647cdeaf32499"
   integrity sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==
 
+rescript-nodejs@^14.4.0:
+  version "14.4.0"
+  resolved "https://registry.yarnpkg.com/rescript-nodejs/-/rescript-nodejs-14.4.0.tgz#f585cd11813e3e232c64dca3ec51cda8af1847a8"
+  integrity sha512-Bbh7wdNMJXYL3M7Tbmy87h0rPUduEKTCABNg8EZoeJsyneZUwRr7ij805zvM8ZpXf0FbPXVMeK4TSxnaFk5ocQ==
+
 rescript@*:
   version "10.1.4"
   resolved "https://registry.yarnpkg.com/rescript/-/rescript-10.1.4.tgz#0f37710d371f32a704f17b4e804f66ce3c79a305"

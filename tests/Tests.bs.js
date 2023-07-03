@@ -4,11 +4,11 @@
 var Fs = require("fs");
 var Path = require("path");
 var Curry = require("rescript/lib/js/curry.js");
+var Belt_Option = require("rescript/lib/js/belt_Option.js");
+var Caml_option = require("rescript/lib/js/caml_option.js");
 var CodeFrame = require("@babel/code-frame");
 
-var dirname = typeof __dirname === "undefined" ? undefined : __dirname;
-
-var dirname$1 = dirname !== undefined ? dirname : "";
+var dirname = Belt_Option.getWithDefault(Caml_option.undefined_to_opt(typeof __dirname === "undefined" ? undefined : __dirname), "");
 
 function cleanUpStackTrace(stack) {
   var removeInternalLines = function (lines, _i) {
@@ -29,27 +29,17 @@ function cleanUpStackTrace(stack) {
               }).join("\n");
 }
 
-function extractSide(side) {
-  if (side !== undefined) {
-    return side;
-  } else {
-    return "no value";
-  }
-}
-
 function run(loc, left, comparator, right) {
   if (Curry._2(comparator, left, right)) {
     return ;
   }
   var match = loc[0];
-  var line = match[1];
-  var fileContent = Fs.readFileSync(Path.join(dirname$1, match[0]), {
+  var fileContent = Fs.readFileSync(Path.join(dirname, match[0]), {
         encoding: "utf-8"
       });
-  var side = JSON.stringify(left);
-  var left$1 = side !== undefined ? side : "no value";
-  var side$1 = JSON.stringify(right);
-  var right$1 = side$1 !== undefined ? side$1 : "no value";
+  var left$1 = Belt_Option.getWithDefault(JSON.stringify(left), "no value");
+  var right$1 = Belt_Option.getWithDefault(JSON.stringify(right), "no value");
+  var line = String(match[1]);
   var codeFrame = CodeFrame.codeFrameColumns(fileContent, {
         start: {
           line: line
@@ -57,15 +47,14 @@ function run(loc, left, comparator, right) {
       }, {
         highlightCode: true
       });
-  var errorMessage = "\n  \u001b[31mTest Failure!\n  \u001b[36m$file\u001b[0m:\u001b[2m" + String(line) + "\n\n" + codeFrame + "\n\n  \u001b[39mLeft: \u001b[31m" + left$1 + "\n  \u001b[39mRight: \u001b[31m" + right$1 + "\u001b[0m\n";
+  var errorMessage = "\n  \u001b[31mTest Failure!\n  \u001b[36m$file\u001b[0m:\u001b[2m" + line + "\n\n" + codeFrame + "\n\n  \u001b[39mLeft: \u001b[31m" + left$1 + "\n  \u001b[39mRight: \u001b[31m" + right$1 + "\u001b[0m\n";
   console.log(errorMessage);
   var obj = {};
   Error.captureStackTrace(obj);
   console.log(cleanUpStackTrace(obj.stack));
 }
 
-exports.dirname = dirname$1;
+exports.dirname = dirname;
 exports.cleanUpStackTrace = cleanUpStackTrace;
-exports.extractSide = extractSide;
 exports.run = run;
 /* dirname Not a pure module */

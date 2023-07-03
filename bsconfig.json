@@ -1,5 +1,6 @@
 {
-  "name": "rescript-project-template",
+  "name": "BApi",
+  "namespace": "BApi",
   "sources": [
     {
       "dir": "src",
@@ -16,5 +17,5 @@
   },
   "suffix": ".bs.js",
   "bsc-flags": ["-open RescriptCore"],
-  "bs-dependencies": ["@rescript/core"]
+  "bs-dependencies": ["@rescript/core", "rescript-nodejs"]
 }

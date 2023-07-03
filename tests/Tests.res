@@ -5,10 +5,7 @@ external codeFrameColumns: (string, {..}, {..}) => string = "codeFrameColumns"
 @module("fs") @val external readFileSync: (string, {..}) => string = "readFileSync"
 @module("path") @val external join: (string, string) => string = "join"
 
-let dirname = switch %external(__dirname) {
-| None => ""
-| Some(dirname) => dirname
-}
+let dirname = %external(__dirname)->Belt.Option.getWithDefault("")
 
 let cleanUpStackTrace = stack => {
   // Stack format: https://nodejs.org/api/errors.html#errors_error_stack
@@ -35,26 +32,25 @@ let cleanUpStackTrace = stack => {
   ->Js.Array2.joinWith("\n")
 }
 
-let extractSide = side =>
-  switch side {
-  | Some(value) => value
-  | None => "no value"
-  }
-
 let run = (loc, left, comparator, right) => {
   if !comparator(left, right) {
     let ((file, line, _, _), _) = loc
     let fileContent = readFileSync(join(dirname, file), {"encoding": "utf-8"})
-    let left = extractSide(Js.Json.stringifyAny(left))
-    let right = extractSide(Js.Json.stringifyAny(right))
+
+    let left = left->Js.Json.stringifyAny->Belt.Option.getWithDefault("no value")
+    let right = right->Js.Json.stringifyAny->Belt.Option.getWithDefault("no value")
+
+    let line = line->Belt.Int.toString
+
     let codeFrame = codeFrameColumns(
       fileContent,
       {"start": {"line": line}},
       {"highlightCode": true},
     )
+
     let errorMessage = `
   \u001b[31mTest Failure!
-  \u001b[36m$file\u001b[0m:\u001b[2m${Belt.Int.toString(line)}
+  \u001b[36m$file\u001b[0m:\u001b[2m${line}
 
 ${codeFrame}
 

@@ -1,5 +1,5 @@
 {
-  "name": "rescript-project-template",
+  "name": "rescript-api-middleware",
   "version": "0.0.1",
   "keywords": [
     "rescript"
@@ -7,7 +7,7 @@
   "license": "MIT",
   "author": "",
   "scripts": {
-    "res:build": "rescript",
+    "res:build": "rescript build",
     "res:clean": "rescript clean",
     "res:dev": "rescript build -w",
     "test": "node tests/TestEverything.bs.js",
@@ -15,7 +15,8 @@
   },
   "dependencies": {
     "@rescript/core": "*",
-    "rescript": "*"
+    "rescript": "*",
+    "rescript-nodejs": "^14.4.0"
   },
   "devDependencies": {
     "@babel/code-frame": "^7.22.5"
