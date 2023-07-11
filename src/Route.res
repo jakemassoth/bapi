@@ -26,6 +26,19 @@ let resolve = (route, allRoutes: list<t>) => {
   allRoutes->Belt.List.keep(isMatch)->Belt.List.get(0)
 }
 
+let mapVariables = (route, strRoute) => {
+  let split = strRoute->Js.String2.split("/")->Belt.List.fromArray->Belt.List.keep(a => a !== "")
+  Belt.List.zip(route, split)->Belt.List.reduce(Belt.Map.String.empty, (
+    acc,
+    (routePart, strRoutePart),
+  ) => {
+    switch routePart {
+    | Variable(x) => acc->Belt.Map.String.set(x, strRoutePart)
+    | Constant(_) => acc
+    }
+  })
+}
+
 let toString = t => {
   t->Belt.List.reduce("", (acc, curr) =>
     acc ++

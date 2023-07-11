@@ -2,6 +2,7 @@
 'use strict';
 
 var Belt_List = require("rescript/lib/js/belt_List.js");
+var Belt_MapString = require("rescript/lib/js/belt_MapString.js");
 
 function resolve(route, allRoutes) {
   var split = Belt_List.keep(Belt_List.fromArray(route.split("/")), (function (a) {
@@ -29,6 +30,20 @@ function resolve(route, allRoutes) {
     }
   };
   return Belt_List.get(Belt_List.keep(allRoutes, isMatch), 0);
+}
+
+function mapVariables(route, strRoute) {
+  var split = Belt_List.keep(Belt_List.fromArray(strRoute.split("/")), (function (a) {
+          return a !== "";
+        }));
+  return Belt_List.reduce(Belt_List.zip(route, split), undefined, (function (acc, param) {
+                var routePart = param[0];
+                if (routePart.TAG === /* Variable */0) {
+                  return Belt_MapString.set(acc, routePart._0, param[1]);
+                } else {
+                  return acc;
+                }
+              }));
 }
 
 function toString(t) {
@@ -59,6 +74,7 @@ function fromString(s) {
 }
 
 exports.resolve = resolve;
+exports.mapVariables = mapVariables;
 exports.toString = toString;
 exports.fromString = fromString;
 /* No side effect */

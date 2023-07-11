@@ -4,6 +4,7 @@
 var Curry = require("rescript/lib/js/curry.js");
 var Caml_obj = require("rescript/lib/js/caml_obj.js");
 var Tests$BApi = require("./Tests.bs.js");
+var Belt_MapString = require("rescript/lib/js/belt_MapString.js");
 var Middleware$BApi = require("../src/Middleware.bs.js");
 
 function resultIsOkAndMatches(result, expected) {
@@ -35,7 +36,7 @@ function testSimple(param) {
           _0: "test"
         },
         tl: /* [] */0
-      }, /* GET */0, (function (param) {
+      }, /* GET */0, (function (params) {
           return {
                   TAG: /* Ok */0,
                   _0: {
@@ -48,7 +49,7 @@ function testSimple(param) {
   Tests$BApi.run([
         [
           "MiddlewareTest.res",
-          34,
+          32,
           15,
           44
         ],
@@ -59,6 +60,45 @@ function testSimple(param) {
       });
 }
 
+function testParams(param) {
+  var middleware = Middleware$BApi.route(Middleware$BApi.make(undefined), {
+        hd: {
+          TAG: /* Variable */0,
+          _0: "var1"
+        },
+        tl: {
+          hd: {
+            TAG: /* Variable */0,
+            _0: "var2"
+          },
+          tl: /* [] */0
+        }
+      }, /* GET */0, (function (params) {
+          var var1 = Belt_MapString.getExn(params, "var1");
+          var var2 = Belt_MapString.getExn(params, "var2");
+          return {
+                  TAG: /* Ok */0,
+                  _0: {
+                    status: 200,
+                    payload: "" + var1 + ":" + var2 + ""
+                  }
+                };
+        }));
+  var f = Middleware$BApi.resolve(middleware, "/test1/test2", /* GET */0);
+  Tests$BApi.run([
+        [
+          "MiddlewareTest.res",
+          56,
+          15,
+          44
+        ],
+        "testing middleware (params)"
+      ], f, resultIsOkAndMatches, {
+        status: 200,
+        payload: "test1:test2"
+      });
+}
+
 function testMethodNotAllowedError(param) {
   var middleware = Middleware$BApi.route(Middleware$BApi.make(undefined), {
         hd: {
@@ -66,7 +106,7 @@ function testMethodNotAllowedError(param) {
           _0: "test"
         },
         tl: /* [] */0
-      }, /* GET */0, (function (param) {
+      }, /* GET */0, (function (params) {
           return {
                   TAG: /* Ok */0,
                   _0: {
@@ -79,7 +119,7 @@ function testMethodNotAllowedError(param) {
   Tests$BApi.run([
         [
           "MiddlewareTest.res",
-          54,
+          74,
           15,
           56
         ],
@@ -101,7 +141,7 @@ function testRouteNotFoundError(param) {
           _0: "test"
         },
         tl: /* [] */0
-      }, /* GET */0, (function (param) {
+      }, /* GET */0, (function (params) {
           return {
                   TAG: /* Ok */0,
                   _0: {
@@ -114,7 +154,7 @@ function testRouteNotFoundError(param) {
   Tests$BApi.run([
         [
           "MiddlewareTest.res",
-          81,
+          99,
           15,
           56
         ],
@@ -133,11 +173,13 @@ function run(param) {
   testSimple(undefined);
   testMethodNotAllowedError(undefined);
   testRouteNotFoundError(undefined);
+  testParams(undefined);
 }
 
 exports.resultIsOkAndMatches = resultIsOkAndMatches;
 exports.resultIsErrorAndMatches = resultIsErrorAndMatches;
 exports.testSimple = testSimple;
+exports.testParams = testParams;
 exports.testMethodNotAllowedError = testMethodNotAllowedError;
 exports.testRouteNotFoundError = testRouteNotFoundError;
 exports.run = run;

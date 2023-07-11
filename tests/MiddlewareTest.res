@@ -19,14 +19,12 @@ let resultIsErrorAndMatches = (result, expected) => {
 }
 
 let testSimple = () => {
-  let middleware = Middleware.make()->Middleware.route(
-    list{Route.Constant("test")},
-    Method.GET,
-    () => Belt.Result.Ok({
-      status: 200,
-      payload: "test",
-    }),
-  )
+  let middleware = Middleware.make()->Middleware.route(list{Route.Constant("test")}, Method.GET, (
+    ~params,
+  ) => Belt.Result.Ok({
+    status: 200,
+    payload: "test",
+  }))
 
   let f = middleware->Middleware.resolve("/test", Method.GET)
 
@@ -38,15 +36,37 @@ let testSimple = () => {
   )
 }
 
-let testMethodNotAllowedError = () => {
+let testParams = () => {
   let middleware = Middleware.make()->Middleware.route(
-    list{Route.Constant("test")},
+    list{Route.Variable("var1"), Route.Variable("var2")},
     Method.GET,
-    () => Belt.Result.Ok({
-      status: 200,
-      payload: "test",
-    }),
+    (~params) => {
+      let var1 = params->Belt.Map.String.getExn("var1")
+      let var2 = params->Belt.Map.String.getExn("var2")
+      Belt.Result.Ok({
+        status: 200,
+        payload: `${var1}:${var2}`,
+      })
+    },
   )
+
+  let f = middleware->Middleware.resolve("/test1/test2", Method.GET)
+
+  Tests.run(
+    __POS_OF__("testing middleware (params)"),
+    f,
+    resultIsOkAndMatches,
+    {payload: "test1:test2", status: 200},
+  )
+}
+
+let testMethodNotAllowedError = () => {
+  let middleware = Middleware.make()->Middleware.route(list{Route.Constant("test")}, Method.GET, (
+    ~params,
+  ) => Belt.Result.Ok({
+    status: 200,
+    payload: "test",
+  }))
 
   let f = middleware->Middleware.resolve("/test", Method.POST)
 
@@ -66,14 +86,12 @@ let testMethodNotAllowedError = () => {
 }
 
 let testRouteNotFoundError = () => {
-  let middleware = Middleware.make()->Middleware.route(
-    list{Route.Constant("test")},
-    Method.GET,
-    () => Belt.Result.Ok({
-      status: 200,
-      payload: "test",
-    }),
-  )
+  let middleware = Middleware.make()->Middleware.route(list{Route.Constant("test")}, Method.GET, (
+    ~params,
+  ) => Belt.Result.Ok({
+    status: 200,
+    payload: "test",
+  }))
 
   let f = middleware->Middleware.resolve("/test1", Method.GET)
 
@@ -96,4 +114,5 @@ let run = () => {
   testSimple()
   testMethodNotAllowedError()
   testRouteNotFoundError()
+  testParams()
 }

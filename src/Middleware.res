@@ -1,7 +1,7 @@
 type routeConfig = {
   route: Route.t,
   method: Method.t,
-  handler: unit => EndpointResult.t,
+  handler: (~params: Belt.Map.String.t<string>) => EndpointResult.t,
 }
 type t = Belt.Map.String.t<routeConfig>
 
@@ -10,7 +10,7 @@ let make = () => Belt.Map.String.empty
 let route = (t, route, method, handler) =>
   t->Belt.Map.String.set(route->Route.toString, {route, method, handler})
 
-let resolve = (t, route, method) => {
+let resolve = (t, strRoute, method) => {
   let notFoundError: EndpointResult.endpointError = {
     status: 404,
     payload: {
@@ -29,17 +29,17 @@ let resolve = (t, route, method) => {
     },
   }
 
-  let getHandler = route => {
+  let getHandler = (strRoute, route) => {
     let config = t->Belt.Map.String.getExn(route->Route.toString)
     switch method == config.method {
     | false => config.method->invalidMethodError->Belt.Result.Error
-    | true => config.handler->Belt.Result.Ok
+    | true => Belt.Result.Ok(() => config.handler(~params=Route.mapVariables(route, strRoute)))
     }
   }
 
-  route
+  strRoute
   ->Route.resolve(
     t->Belt.Map.String.keysToArray->Belt.List.fromArray->Belt.List.map(Route.fromString),
   )
-  ->Option.mapWithDefault(Belt.Result.Error(notFoundError), getHandler)
+  ->Option.mapWithDefault(Belt.Result.Error(notFoundError), route => getHandler(strRoute, route))
 }
