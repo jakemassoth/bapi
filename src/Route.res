@@ -10,7 +10,7 @@ let resolve = (route, allRoutes: list<t>) => {
     let couldBeMatch = (a, b) => {
       switch a {
       // If it is a variable, we have no idea
-      | Variable(x) => true
+      | Variable(_) => true
       // We can check if the constant name is the same
       | Constant(name) => name == b
       }
@@ -24,10 +24,6 @@ let resolve = (route, allRoutes: list<t>) => {
   }
 
   allRoutes->Belt.List.keep(isMatch)->Belt.List.get(0)
-}
-
-let isResolveable = (routes: list<t>) => {
-  true
 }
 
 let toString = t => {

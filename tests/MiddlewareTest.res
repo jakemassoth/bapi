@@ -28,10 +28,10 @@ let testSimple = () => {
     }),
   )
 
-  let f = "/test"->Router.resolve(Method.GET, middleware)
+  let f = middleware->Middleware.resolve("/test", Method.GET)
 
   Tests.run(
-    __POS_OF__("testing middleware (1)"),
+    __POS_OF__("testing middleware (simple)"),
     f,
     resultIsOkAndMatches,
     {payload: "test", status: 200},
@@ -48,7 +48,7 @@ let testMethodNotAllowedError = () => {
     }),
   )
 
-  let f = "/test"->Router.resolve(Method.POST, middleware)
+  let f = middleware->Middleware.resolve("/test", Method.POST)
 
   Tests.run(
     __POS_OF__("testing middleware (method not allowed)"),
@@ -75,7 +75,7 @@ let testRouteNotFoundError = () => {
     }),
   )
 
-  let f = "/test1"->Router.resolve(Method.GET, middleware)
+  let f = middleware->Middleware.resolve("/test1", Method.GET)
 
   Tests.run(
     __POS_OF__("testing middleware (endpoint not found)"),

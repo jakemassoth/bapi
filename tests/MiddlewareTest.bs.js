@@ -4,7 +4,6 @@
 var Curry = require("rescript/lib/js/curry.js");
 var Caml_obj = require("rescript/lib/js/caml_obj.js");
 var Tests$BApi = require("./Tests.bs.js");
-var Router$BApi = require("../src/Router.bs.js");
 var Middleware$BApi = require("../src/Middleware.bs.js");
 
 function resultIsOkAndMatches(result, expected) {
@@ -45,15 +44,15 @@ function testSimple(param) {
                   }
                 };
         }));
-  var f = Router$BApi.resolve("/test", /* GET */0, middleware);
+  var f = Middleware$BApi.resolve(middleware, "/test", /* GET */0);
   Tests$BApi.run([
         [
           "MiddlewareTest.res",
           34,
           15,
-          39
+          44
         ],
-        "testing middleware (1)"
+        "testing middleware (simple)"
       ], f, resultIsOkAndMatches, {
         status: 200,
         payload: "test"
@@ -76,7 +75,7 @@ function testMethodNotAllowedError(param) {
                   }
                 };
         }));
-  var f = Router$BApi.resolve("/test", /* POST */2, middleware);
+  var f = Middleware$BApi.resolve(middleware, "/test", /* POST */2);
   Tests$BApi.run([
         [
           "MiddlewareTest.res",
@@ -111,7 +110,7 @@ function testRouteNotFoundError(param) {
                   }
                 };
         }));
-  var f = Router$BApi.resolve("/test1", /* GET */0, middleware);
+  var f = Middleware$BApi.resolve(middleware, "/test1", /* GET */0);
   Tests$BApi.run([
         [
           "MiddlewareTest.res",

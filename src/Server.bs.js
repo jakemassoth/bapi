@@ -5,7 +5,6 @@ var Http = require("http");
 var Curry = require("rescript/lib/js/curry.js");
 var Belt_Result = require("rescript/lib/js/belt_Result.js");
 var Method$BApi = require("./Method.bs.js");
-var Router$BApi = require("./Router.bs.js");
 var Core__Option = require("@rescript/core/src/Core__Option.bs.js");
 var Middleware$BApi = require("./Middleware.bs.js");
 
@@ -38,7 +37,7 @@ function writeResponse(result, response) {
 function serve(middleware, port, host) {
   return Http.createServer(function (request, response) {
                 writeResponse(Belt_Result.flatMap(Belt_Result.flatMap(Method$BApi.make(request.method), (function (method) {
-                                return Router$BApi.resolve(request.url, method, middleware);
+                                return Middleware$BApi.resolve(middleware, request.url, method);
                               })), (function (f) {
                             return Curry._1(f, undefined);
                           })), response);

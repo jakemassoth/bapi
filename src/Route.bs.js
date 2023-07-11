@@ -31,10 +31,6 @@ function resolve(route, allRoutes) {
   return Belt_List.get(Belt_List.keep(allRoutes, isMatch), 0);
 }
 
-function isResolveable(routes) {
-  return true;
-}
-
 function toString(t) {
   return Belt_List.reduce(t, "", (function (acc, curr) {
                 var tmp;
@@ -63,7 +59,6 @@ function fromString(s) {
 }
 
 exports.resolve = resolve;
-exports.isResolveable = isResolveable;
 exports.toString = toString;
 exports.fromString = fromString;
 /* No side effect */

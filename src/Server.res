@@ -29,9 +29,9 @@ let serve = (middleware, port, host) => {
     request
     ->Http.IncomingMessage.method__
     ->Method.make
-    ->Belt.Result.flatMap(method => {
-      request->Http.IncomingMessage.url->Router.resolve(method, middleware)
-    })
+    ->Belt.Result.flatMap(method =>
+      Middleware.resolve(middleware, request->Http.IncomingMessage.url, method)
+    )
     ->Belt.Result.flatMap(f => f())
     ->writeResponse(response)
   })->Http.Server.listen(
