@@ -1,1 +1,2 @@
 RouteTest.run()
+MiddlewareTest.run()

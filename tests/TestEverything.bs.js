@@ -2,7 +2,10 @@
 'use strict';
 
 var RouteTest$BApi = require("./RouteTest.bs.js");
+var MiddlewareTest$BApi = require("./MiddlewareTest.bs.js");
 
 RouteTest$BApi.run(undefined);
+
+MiddlewareTest$BApi.run(undefined);
 
 /*  Not a pure module */

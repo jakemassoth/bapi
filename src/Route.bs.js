@@ -31,6 +31,10 @@ function resolve(route, allRoutes) {
   return Belt_List.get(Belt_List.keep(allRoutes, isMatch), 0);
 }
 
+function isResolveable(routes) {
+  return true;
+}
+
 function toString(t) {
   return Belt_List.reduce(t, "", (function (acc, curr) {
                 var tmp;
@@ -39,6 +43,27 @@ function toString(t) {
               }));
 }
 
+function fromString(s) {
+  return Belt_List.map(Belt_List.keep(Belt_List.fromArray(s.split("/")), (function (a) {
+                    return a !== "";
+                  })), (function (elem) {
+                var startsWithColon = elem.startsWith(":");
+                if (startsWithColon) {
+                  return {
+                          TAG: /* Variable */0,
+                          _0: elem.substring(1)
+                        };
+                } else {
+                  return {
+                          TAG: /* Constant */1,
+                          _0: elem
+                        };
+                }
+              }));
+}
+
 exports.resolve = resolve;
+exports.isResolveable = isResolveable;
 exports.toString = toString;
+exports.fromString = fromString;
 /* No side effect */

@@ -26,6 +26,10 @@ let resolve = (route, allRoutes: list<t>) => {
   allRoutes->Belt.List.keep(isMatch)->Belt.List.get(0)
 }
 
+let isResolveable = (routes: list<t>) => {
+  true
+}
+
 let toString = t => {
   t->Belt.List.reduce("", (acc, curr) =>
     acc ++
@@ -35,4 +39,18 @@ let toString = t => {
     | Constant(s) => s
     }
   )
+}
+
+let fromString = s => {
+  s
+  ->Js.String2.split("/")
+  ->Belt.List.fromArray
+  ->Belt.List.keep(a => a !== "")
+  ->Belt.List.map(elem => {
+    let startsWithColon = elem->Js.String2.startsWith(":")
+    switch startsWithColon {
+    | true => Variable(elem->Js.String2.substringToEnd(~from=1))
+    | false => Constant(elem)
+    }
+  })
 }

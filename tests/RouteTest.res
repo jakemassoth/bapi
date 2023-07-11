@@ -18,13 +18,13 @@ let testResolve1 = () => {
   }
 
   Tests.run(
-    __POS_OF__("testing Route.resolve"),
+    __POS_OF__("testing Route.resolve (simple 1)"),
     "/something/constantTwo"->Route.resolve(possibleRoutes)->Belt.Option.getUnsafe->Route.toString,
     stringEquals,
     "/:varTwo/constantTwo",
   )
   Tests.run(
-    __POS_OF__("testing Route.resolve"),
+    __POS_OF__("testing Route.resolve simple 2"),
     "/something/constantOne"->Route.resolve(possibleRoutes)->Belt.Option.getUnsafe->Route.toString,
     stringEquals,
     "/:varOne/constantOne",
@@ -38,7 +38,7 @@ let testResolve2 = () => {
   }
 
   Tests.run(
-    __POS_OF__("testing Route.resolve"),
+    __POS_OF__("testing Route.resolve (super route)"),
     "/something/constantOne/somethingElse"
     ->Route.resolve(possibleRoutes)
     ->Belt.Option.getUnsafe
@@ -47,7 +47,7 @@ let testResolve2 = () => {
     "/:varOne/constantOne/:varTwo",
   )
   Tests.run(
-    __POS_OF__("testing Route.resolve"),
+    __POS_OF__("testing Route.resolve (sub route)"),
     "/something/constantOne"->Route.resolve(possibleRoutes)->Belt.Option.getUnsafe->Route.toString,
     stringEquals,
     "/:varOne/constantOne",

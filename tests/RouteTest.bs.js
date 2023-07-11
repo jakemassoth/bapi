@@ -69,18 +69,18 @@ function testResolve1(param) {
           "RouteTest.res",
           21,
           15,
-          38
+          49
         ],
-        "testing Route.resolve"
+        "testing Route.resolve (simple 1)"
       ], Route$BApi.toString(Route$BApi.resolve("/something/constantTwo", possibleRoutes)), stringEquals, "/:varTwo/constantTwo");
   Tests$BApi.run([
         [
           "RouteTest.res",
           27,
           15,
-          38
+          47
         ],
-        "testing Route.resolve"
+        "testing Route.resolve simple 2"
       ], Route$BApi.toString(Route$BApi.resolve("/something/constantOne", possibleRoutes)), stringEquals, "/:varOne/constantOne");
 }
 
@@ -127,18 +127,18 @@ function testResolve2(param) {
           "RouteTest.res",
           41,
           15,
-          38
+          52
         ],
-        "testing Route.resolve"
+        "testing Route.resolve (super route)"
       ], Route$BApi.toString(Route$BApi.resolve("/something/constantOne/somethingElse", possibleRoutes)), stringEquals, "/:varOne/constantOne/:varTwo");
   Tests$BApi.run([
         [
           "RouteTest.res",
           50,
           15,
-          38
+          50
         ],
-        "testing Route.resolve"
+        "testing Route.resolve (sub route)"
       ], Route$BApi.toString(Route$BApi.resolve("/something/constantOne", possibleRoutes)), stringEquals, "/:varOne/constantOne");
 }
 
